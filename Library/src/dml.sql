@@ -53,9 +53,26 @@ INNER JOIN tmember ON tloan.cCPR = tmember.cCPR)
 INNER JOIN tbook ON tbook.nBookID = tbookcopy.nBookID;
 
 #14 not done
-SELECT  cName, cTitle FROM ttheme, tbooktheme, tbook
-WHERE ttheme.nThemeID = tbooktheme.nThemeID
-AND tbooktheme.nBookID = tbook.nBookID;
+SELECT cName, cTitle FROM  tbook, ttheme LEFT JOIN tbooktheme t on ttheme.nThemeID = t.nThemeID
+WHERE (t.nThemeID IS NULL OR t.nThemeID IS NOT NULL) AND tbook.nBookID = t.nBookID ORDER BY cName;
+
+#15
+SELECT cName, cSurname, cTitle FROM tmember, tbook, tbookcopy, tloan
+WHERE tbook.nBookID = tbookcopy.nBookID
+AND tbookcopy.cSignature = tloan.cSignature
+AND tloan.cCPR = tmember.cCPR
+AND dNewMember BETWEEN '2013-01-01' AND '2013-12-31'
+AND dLoan BETWEEN '2013-01-01' AND '2013-12-31'
+ORDER BY cName, cSurname;
+
+#16
+SELECT tauthor.cName, tauthor.cSurname, tcountry.cName, if(tauthor.nAuthorID <> tauthorship.nBookID, tbook.cTitle, '') AS TITLE
+FROM tauthor
+INNER JOIN tnationality ON tauthor.nAuthorID = tnationality.nAuthorID
+INNER JOIN tcountry ON tnationality.nCountryID = tcountry.nCountryID
+INNER JOIN tauthorship ON tauthor.nAuthorID = tauthorship.nAuthorID
+INNER JOIN tbook ON tauthorship.nBookID = tbook.nBookID
+ORDER BY  tauthor.cName, cSurname;
 
 #17
 SELECT book1.cTitle AS 'Books with releases in 1970 and 1989' FROM tbook book1, tbook book2
@@ -74,6 +91,12 @@ FROM tauthor WHERE cName = 'William') AS SUB;
 #19
 SELECT cName, cSurname FROM tmember ORDER BY dNewMember ASC LIMIT 1;
 
+#20
+
+#21
+SELECT tpublishingcompany.cName AS Name, tcountry.cName AS Country FROM tpublishingcompany, tcountry
+WHERE tpublishingcompany.nCountryID = tcountry.nCountryID;
+
 #22
 SELECT cTitle FROM tbook
 WHERE nPublishingYear BETWEEN '1926' AND '1978'
@@ -82,7 +105,7 @@ WHERE nPublishingYear BETWEEN '1926' AND '1978'
 #23
 SELECT cName, cSurname FROM tmember
 WHERE dNewMember > '2016-01-01'
-  AND cAddress IS NULL;
+AND cAddress IS NULL;
 
 #24
 SELECT DISTINCT tcountry.nCountryID FROM tcountry, tpublishingcompany
@@ -91,14 +114,14 @@ WHERE tpublishingcompany.nCountryID = tcountry.nCountryID
 #25
 SELECT cTitle FROM tbook
 WHERE cTitle LIKE 'The Tale%'
-  AND nPublishingCompanyID NOT IN ('13');
+AND nPublishingCompanyID NOT IN ('13');
 
 #26
 SELECT DISTINCT ttheme.cName FROM ttheme, tpublishingcompany, tbooktheme, tbook
 WHERE tpublishingcompany.cName = 'Lynch Inc'
-  AND tpublishingcompany.nPublishingCompanyID = tbook.nPublishingCompanyID
-  AND tbook.nBookID = tbooktheme.nBookID
-  AND tbooktheme.nThemeID = ttheme.nThemeID;
+AND tpublishingcompany.nPublishingCompanyID = tbook.nPublishingCompanyID
+AND tbook.nBookID = tbooktheme.nBookID
+AND tbooktheme.nThemeID = ttheme.nThemeID;
 
 #27
 SELECT DISTINCT cTitle FROM tbook
