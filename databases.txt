@@ -1,0 +1,4 @@
+Berkeley DB - Key-Value Database
+DynamoDB - Document Database
+Apache Cassandra - Columnar Database
+Neo4j - Graph Database

@@ -52,7 +52,7 @@ INNER JOIN tbookcopy ON tloan.cSignature = tbookcopy.cSignature)
 INNER JOIN tmember ON tloan.cCPR = tmember.cCPR)
 INNER JOIN tbook ON tbook.nBookID = tbookcopy.nBookID;
 
-#14 not done
+#14 not done this is what i tried
 SELECT cName, cTitle FROM  tbook, ttheme LEFT JOIN tbooktheme t on ttheme.nThemeID = t.nThemeID
 WHERE (t.nThemeID IS NULL OR t.nThemeID IS NOT NULL) AND tbook.nBookID = t.nBookID ORDER BY cName;
 
@@ -91,7 +91,15 @@ FROM tauthor WHERE cName = 'William') AS SUB;
 #19
 SELECT cName, cSurname FROM tmember ORDER BY dNewMember ASC LIMIT 1;
 
-#20
+#20 tried a lot of things
+SELECT nPublishingYear, COUNT(*) AS 'No. Books Published', cName
+FROM tbook, (SELECT cName FROM tcountry
+                                   LEFT JOIN tnationality ON tcountry.nCountryID = tnationality.nCountryID
+             GROUP BY cName
+             HAVING COUNT(*) >= 3) name
+GROUP BY nPublishingYear, cName
+ORDER BY nPublishingYear;
+
 
 #21
 SELECT tpublishingcompany.cName AS Name, tcountry.cName AS Country FROM tpublishingcompany, tcountry
